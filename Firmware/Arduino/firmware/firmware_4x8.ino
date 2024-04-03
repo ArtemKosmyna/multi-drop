@@ -7,13 +7,13 @@ Servo myservo;
 const int servoPin = 4;
 const int positionMove = 700;
 const int positionStop = 1500;
-const int minMagnet = 514;
-const int maxMagnet = 525;
+const int minMagnet = 467;
+const int maxMagnet = 582;
 
-const int hallSensorOpenPin = 2;
-const int hallSensorClosedPin = 1;
+const int hallSensorOpenPin = 3;
+const int hallSensorClosedPin = 2;
 
-const int activationPin = A3;
+const int activationPin = A1;
 
 bool lastSignalState = false;
 bool closedStateDetected = false;
@@ -48,6 +48,8 @@ void setup() {
     pinMode(hallSensorClosedPin, INPUT);
     Serial.begin(9600);
     Serial.println("---------- Multi Drop Version 1.0.0 ------------");
+    Serial.println(readHallSensor(hallSensorClosedPin));
+    Serial.println(readHallSensor(hallSensorOpenPin));
 }
 
 void loop() {
