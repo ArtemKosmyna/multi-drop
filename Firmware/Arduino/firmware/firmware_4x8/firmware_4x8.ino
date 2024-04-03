@@ -4,11 +4,14 @@
 
 Servo myservo;
 
+
 const int servoPin = 4;
 const int positionMove = 700;
 const int positionStop = 1500;
-const int minMagnet = 467;
-const int maxMagnet = 582;
+const int minOpenMagnet = 500; 
+const int maxOpenMagnet = 540;
+const int minClosedMagnet = 500; 
+const int maxClosedMagnet = 540;
 
 const int hallSensorOpenPin = 3;
 const int hallSensorClosedPin = 2;
@@ -38,6 +41,7 @@ bool processSignal() {
     return false;
 }
 
+
 int readHallSensor(int pin) {
     return analogRead(pin);
 }
@@ -56,11 +60,16 @@ void loop() {
     int closedStateValue = readHallSensor(hallSensorClosedPin);
     int openStateValue = readHallSensor(hallSensorOpenPin);
 
-    if (closedStateValue < minMagnet || closedStateValue > maxMagnet) {
+    Serial.println("Closed");
+    Serial.println(readHallSensor(hallSensorClosedPin));
+    Serial.println("Open");
+    Serial.println(readHallSensor(hallSensorOpenPin));
+
+    if (closedStateValue < minClosedMagnet || closedStateValue > maxClosedMagnet) {
         closedStateDetected = true;
     }
 
-    if (openStateValue < minMagnet || openStateValue > maxMagnet) {
+    if (openStateValue < minOpenMagnet || openStateValue > maxOpenMagnet) {
         openStateDetected = true;
     }
 
@@ -72,7 +81,7 @@ void loop() {
             myservo.writeMicroseconds(positionMove);
         }
 
-        if (refilled != 0 && closedStateDetected && (openStateValue < minMagnet || openStateValue > maxMagnet)) {
+        if (refilled != 0 && closedStateDetected && (openStateValue < minOpenMagnet || openStateValue > maxOpenMagnet)) {
             Serial.println("Refill Waiting");
             Serial.println(closedStateValue);
             Serial.println(openStateValue);
@@ -94,7 +103,7 @@ void loop() {
             myservo.writeMicroseconds(positionMove);
             dropActive = true;
         }
-        if (openStateDetected && (closedStateValue < minMagnet || closedStateValue > maxMagnet)) {
+        if (openStateDetected && (closedStateValue < minClosedMagnet || closedStateValue > maxClosedMagnet)) {
             Serial.println("Drop activated");
             Serial.println(closedStateValue);
             Serial.println(openStateValue);
